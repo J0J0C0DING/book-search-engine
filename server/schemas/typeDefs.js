@@ -30,6 +30,7 @@ const typeDefs = gql`
     title: String
     bookId: String
     image: String
+    link: String
   }
 
   type Auth {
