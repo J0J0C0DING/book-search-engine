@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { searchGoogleBooks } from '../utils/API';
+
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 import { useMutation } from '@apollo/client';
@@ -33,7 +33,7 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await searchGoogleBooks(searchInput);
+      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${searchInput}`);
 
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -50,6 +50,7 @@ const SearchBooks = () => {
       }));
 
       setSearchedBooks(bookData);
+      console.log('Book Data:', bookData);
       setSearchInput('');
     } catch (err) {
       console.error(err);
@@ -60,7 +61,7 @@ const SearchBooks = () => {
   const handleSaveBook = async bookId => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find(book => book.bookId === bookId);
-
+    console.log(bookToSave);
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
